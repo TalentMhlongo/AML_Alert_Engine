@@ -1,1 +1,11 @@
-
+﻿CUSTOMER_ID,FIRST_NAME,LAST_NAME,COUNTRY,ACCOUNT_STATUS,RISK_RATING,REGISTRATION_DATE
+1001,Sipho,Dlamini,South Africa,Active,Low,2024-01-15
+1002,Thando,Mkhize,South Africa,Active,Medium,2024-02-10
+1003,Ayanda,Zulu,South Africa,Active,Low,2024-02-27
+1004,Lerato,Mokoena,South Africa,Active,High,2024-03-02
+1005,Sibusiso,Khumalo,South Africa,Dormant,Medium,2024-03-18
+1006,Nomsa,Ndlovu,South Africa,Active,Low,2024-04-01
+1007,Mandla,Buthelezi,South Africa,Active,Medium,2024-04-11
+1008,Zanele,Nkosi,South Africa,Active,High,2024-04-20
+1009,Themba,Naidoo,South Africa,Active,Low,2024-05-03
+1010,Nokuthula,Pillay,South Africa,Active,Medium,2024-05-14
