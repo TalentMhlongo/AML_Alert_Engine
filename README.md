@@ -51,3 +51,13 @@ AML_Alert_Engine/
 └── dashboard/
     ├── aml_dashboard.pbix
     └── screenshots/
+
+## Data Source Options
+
+This project supports two input methods:
+
+### 1. CSV Files (Default)
+The default version reads `customers.csv` and `deposits.csv` from the `data/raw/` folder. This makes the project easy to run locally and easy for recruiters to review.
+
+### 2. IBM Db2 (Optional)
+The project also supports reading customer and deposit data directly from IBM Db2 using environment variables for connection details.
