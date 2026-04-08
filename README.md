@@ -25,6 +25,16 @@ AML_Alert_Engine/
 │
 ├── README.md
 ├── requirements.txt
+├── .gitignore
+│
+├── data/
+│   ├── raw/
+│   │   ├── customers.csv
+│   │   └── deposits.csv
+│   │
+│   └── processed/
+│       ├── flagged_transactions.csv
+│       └── customer_risk_summary.csv
 │
 ├── SQL/
 │   ├── 01_create_tables.sql
@@ -38,10 +48,6 @@ AML_Alert_Engine/
 │   ├── export_results.py
 │   └── main.py
 │
-├── data/
-│   └── processed/
-│       ├── flagged_transactions.csv
-│       └── customer_risk_summary.csv
-│
 └── dashboard/
+    ├── aml_dashboard.pbix
     └── screenshots/
