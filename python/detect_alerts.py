@@ -1,60 +1,59 @@
-from config import (
-    THRESHOLD,
-    NEAR_THRESHOLD_MIN,
-    NEAR_THRESHOLD_MAX,
-    STRUCTURING_COUNT,
-    HIGH_FREQUENCY_COUNT,
-)
+import pandas as pd
+from config import THRESHOLD
 
-def prepare_data(customers, deposits):
-    df = deposits.merge(customers, on="customer_id", how="left")
-    df["deposit_date"] = df["deposit_date"].astype("datetime64[ns]")
-    return df
 
-def apply_rules(df):
-    df["flag_high_value"] = (df["amount"] > THRESHOLD).astype(int)
+def single_large_deposits(df):
+    df = df.copy()
+    df.columns = df.columns.str.lower()
 
-    df["flag_near_threshold"] = df["amount"].between(
-        NEAR_THRESHOLD_MIN, NEAR_THRESHOLD_MAX
-    ).astype(int)
+    alerts = df[
+        (df["amount"] >= THRESHOLD)
+    ].copy()
 
-    near_counts = (
-        df.groupby("customer_id")["flag_near_threshold"]
+    alerts["alert_type"] = "Single Large Deposit"
+    alerts["alert_reason"] = "Deposit exceeds R50,000"
+    alerts["amount_flagged"] = alerts["amount"]
+
+    return alerts
+
+
+def monthly_aggregation(df):
+    df = df.copy()
+    df.columns = df.columns.str.lower()
+
+    df["deposit_date"] = pd.to_datetime(df["deposit_date"])
+    df["year_month"] = df["deposit_date"].dt.to_period("M")
+
+    monthly = (
+        df.groupby(["customer_id", "year_month"])["amount"]
         .sum()
-        .reset_index(name="near_threshold_count")
-    )
-    df = df.merge(near_counts, on="customer_id", how="left")
-    df["flag_structuring"] = (df["near_threshold_count"] >= STRUCTURING_COUNT).astype(int)
-
-    txn_counts = (
-        df.groupby("customer_id")["deposit_id"]
-        .count()
-        .reset_index(name="deposit_count")
-    )
-    df = df.merge(txn_counts, on="customer_id", how="left")
-    df["flag_high_frequency"] = (df["deposit_count"] >= HIGH_FREQUENCY_COUNT).astype(int)
-
-    df["flag_high_risk_customer"] = df["risk_rating"].isin(["High", "Medium"]).astype(int)
-
-    df["risk_score"] = (
-        df["flag_high_value"] * 3
-        + df["flag_structuring"] * 3
-        + df["flag_high_frequency"] * 2
-        + df["flag_high_risk_customer"] * 2
+        .reset_index()
     )
 
-    df["suspicious_flag"] = (df["risk_score"] >= 5).astype(int)
-    return df
+    alerts = monthly[monthly["amount"] >= THRESHOLD].copy()
 
-def build_customer_summary(df):
-    summary = (
-        df.groupby(["customer_id", "first_name", "last_name", "risk_rating"], as_index=False)
-        .agg(
-            total_deposits=("deposit_id", "count"),
-            total_amount=("amount", "sum"),
-            suspicious_deposits=("suspicious_flag", "sum"),
-            max_risk_score=("risk_score", "max"),
-        )
+    alerts["alert_type"] = "Monthly Aggregate"
+    alerts["alert_reason"] = "Monthly deposits exceed threshold"
+    alerts["amount_flagged"] = alerts["amount"]
+
+    return alerts
+
+def high_frequency(df, threshold_count=5):
+    df = df.copy()
+    df.columns = df.columns.str.lower()
+
+    df["deposit_date"] = pd.to_datetime(df["deposit_date"])
+    df["transaction_day"] = df["deposit_date"].dt.date
+
+    frequency = (
+        df.groupby(["customer_id", "transaction_day"])
+        .size()
+        .reset_index(name="transaction_count")
     )
-    summary["customer_flagged"] = (summary["suspicious_deposits"] > 0).astype(int)
-    return summary
+
+    alerts = frequency[frequency["transaction_count"] >= threshold_count].copy()
+
+    alerts["alert_type"] = "High Frequency Transactions"
+    alerts["alert_reason"] = f"{threshold_count} or more transactions in one day"
+
+    return alerts
