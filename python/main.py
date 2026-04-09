@@ -1,21 +1,29 @@
 from load_data import load_all_data
-from detect_alerts import prepare_data, apply_rules, build_customer_summary
-from export_results import export_results
+from detect_alerts import single_large_deposits, monthly_aggregation, high_frequency
+from export_results import export_to_csv
+
 
 def main():
+    print("Loading data from CSV files...")
     customers, deposits = load_all_data()
 
-    df = prepare_data(customers, deposits)
-    df = apply_rules(df)
+    print(f"Customers loaded: {len(customers)}")
+    print(f"Deposit loaded: {len(deposits)}")
 
-    flagged_transactions = df[df["suspicious_flag"] == 1].copy()
-    customer_summary = build_customer_summary(df)
+    single_alerts = single_large_deposits(deposits)
+    monthly_alerts = monthly_aggregation(deposits)
+    freq_alerts = high_frequency(deposits)
 
-    export_results(flagged_transactions, customer_summary)
+    print(f"Single alerts: {len(single_alerts)}")
+    print(f"Monthly alerts: {len(monthly_alerts)}")
+    print(f"Frequency alerts: {len(freq_alerts)}")
 
-    print("AML alert engine completed successfully.")
-    print("Flagged transactions:", len(flagged_transactions))
-    print("Flagged customers:", customer_summary["customer_flagged"].sum())
+    export_to_csv(single_alerts, "single_large_deposit_alerts.csv")
+    export_to_csv(monthly_alerts, "monthly_aggregate_alerts.csv")
+    export_to_csv(freq_alerts, "high_frequency_alerts.csv")
+
+    print("AML process complete.")
+
 
 if __name__ == "__main__":
     main()
