@@ -13,6 +13,11 @@ from config import (
     DEPOSITS_TABLE,
 )
 
+
+
+
+
+
 def load_from_csv():
     customers = pd.read_csv(CUSTOMERS_FILE)
     deposits = pd.read_csv(DEPOSITS_FILE)
