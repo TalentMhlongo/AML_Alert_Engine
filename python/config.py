@@ -7,6 +7,13 @@ PROCESSED_DATA_PATH = os.path.join(BASE_DIR, "data", "processed")
 CUSTOMERS_FILE = os.path.join(RAW_DATA_PATH, "customers.csv")
 DEPOSITS_FILE = os.path.join(RAW_DATA_PATH, "deposits.csv")
 
+
+
+
+
+
+
+
 DATA_SOURCE = os.getenv("DATA_SOURCE", "csv")  # csv or db
 
 DB2_HOST = os.getenv("DB2_HOST")
