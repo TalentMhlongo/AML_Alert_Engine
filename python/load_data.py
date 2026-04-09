@@ -14,9 +14,7 @@ from config import (
 )
 
 
-
-
-
+ 
 
 def load_from_csv():
     customers = pd.read_csv(CUSTOMERS_FILE)
