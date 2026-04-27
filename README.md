@@ -33,29 +33,11 @@ The project also supports reading customer and deposit data directly from IBM Db
 ## Project Structure
 ```text
 AML_Alert_Engine/
-│
-├── README.md
-├── requirements.txt
-├── .gitignore
-│
 ├── data/
 │   ├── raw/
-│   │   ├── customers.csv
-│   │   └── deposits.csv
-│
+│   └── processed/
 ├── SQL/
-│   ├── 01_create_tables.sql
-│   ├── 02_insert_mock_data.sql
-│   └── 03_monitoring_queries.sql
-│
 ├── python/
-│   ├── config.py
-│   ├── load_data.py
-│   ├── detect_alerts.py
-│   ├── export_results.py
-│   └── main.py
-│
-└── dashboard/
-    ├── aml_dashboard.pbix
-    └── screenshots/
-
+├── dashboard/
+│   └── screenshots/
+└── README.md
