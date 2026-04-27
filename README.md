@@ -42,10 +42,6 @@ AML_Alert_Engine/
 │   ├── raw/
 │   │   ├── customers.csv
 │   │   └── deposits.csv
-│   │
-│   └── processed/
-│       ├── flagged_transactions.csv
-│       └── customer_risk_summary.csv
 │
 ├── SQL/
 │   ├── 01_create_tables.sql
